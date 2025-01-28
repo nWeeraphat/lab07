@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ตัวอย่างที่ 10</title>
+  <style>
+    #gameArea {
+      width: 300px;
+      height: 300px;
+      border: 1px solid black;
+      position: relative;
+    }
+    #target {
+      width: 30px;
+      height: 30px;
+      background-color: red;
+      position: absolute;
+      cursor: pointer;
+    }
+    #startButton {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h3>เกมคลิกเป้าหมาย</h3>
+  <p>คะแนน: <span id="score">0</span></p>
+  <p>เวลา: <span id="timeLeft">30</span> วินาที</p>
+  <button id="startButton" onclick="startGame()">เริ่มเกม</button>
+
+  <div id="gameArea">
+    <div id="target" onclick="hitTarget()"></div>
+  </div>
+
+  <script>
+    let score = 0;
+    let timeLeft = 30;
+    let timerInterval;
+    let gameStarted = false;
+
+    // ฟังก์ชันเริ่มเกม
+    function startGame() {
+      if (!gameStarted) {
+        gameStarted = true;
+        document.getElementById("startButton").style.display = "none"; // ซ่อนปุ่มเริ่ม
+        score = 0;
+        timeLeft = 30;
+        document.getElementById("score").textContent = score;
+        document.getElementById("timeLeft").textContent = timeLeft;
+
+        // ตั้งเวลา
+        timerInterval = setInterval(function () {
+          timeLeft--;
+          document.getElementById("timeLeft").textContent = timeLeft;
+
+          if (timeLeft === 0) {
+            clearInterval(timerInterval); // หยุดจับเวลา
+            alert("Game Over! คะแนนของคุณคือ " + score);
+            document.getElementById("startButton").style.display = "block"; // แสดงปุ่มเริ่มใหม่
+            gameStarted = false;
+          }
+        }, 1000);
+      }
+    }
+
+    // ฟังก์ชันเพิ่มคะแนนเมื่อคลิกที่เป้าหมาย
+    function hitTarget() {
+      if (gameStarted) {
+        score++;
+        document.getElementById("score").textContent = score;
+
+        // สุมตำแหน่งใหม่ของเป้าหมาย
+        let gameArea = document.getElementById("gameArea");
+        let target = document.getElementById("target");
+        let maxX = gameArea.offsetWidth - target.offsetWidth;
+        let maxY = gameArea.offsetHeight - target.offsetHeight;
+
+        let newX = Math.floor(Math.random() * maxX);
+        let newY = Math.floor(Math.random() * maxY);
+
+        target.style.left = newX + "px";
+        target.style.top = newY + "px";
+      }
+    }
+  </script>
+</body>
+</html>
